@@ -4,6 +4,7 @@ export default async function sendMsgToOpenAI(message) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message })
   });
+
   const data = await res.json();
-  return data.text;
+  return data.reply;   
 }

@@ -1,36 +1,44 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
-
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // 🔴 REQUIRED
 
-const openai = new OpenAI({
+const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
 app.post("/api/chat", async (req, res) => {
   try {
+    console.log("BODY:", req.body); // DEBUG
+
     const { message } = req.body;
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: message }],
-      max_tokens: 256,
-      temperature: 0.7,
+
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
+    const completion = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: message }]
     });
-    res.json({ text: response.choices[0].message.content });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ text: "Error connecting to OpenAI" });
+
+    res.json({
+      reply: completion.choices[0].message.content
+    });
+
+  } catch (error) {
+    console.error("🔥 BACKEND ERROR:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

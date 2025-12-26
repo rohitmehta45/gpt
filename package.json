@@ -22,7 +22,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server.js", 
-    "type": "module"
+    "type": "module",
+    "model": "gpt-3.5-turbo"
   },
   "eslintConfig": {
     "extends": [
