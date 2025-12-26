@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node server.js", 
+    "server": "node server.js",
     "type": "module",
     "model": "gpt-3.5-turbo"
   },
